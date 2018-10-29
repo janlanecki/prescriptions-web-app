@@ -10,7 +10,6 @@ class Doctor(User):
         ('DH', 'dr hab. n. med.'),
         ('PR', 'prof. dr hab. n. med.'),
     )
-    id = models.PositiveIntegerField(primary_key=True)
     gender = models.BooleanField()  # true for Mr./false for Ms.
     title = models.CharField(max_length=2, choices=TITLES, default=TITLES[0][0])
 
