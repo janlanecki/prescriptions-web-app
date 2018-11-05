@@ -16,8 +16,7 @@ class FormsView(TemplateView):
 		dosage_form = DosageForm(request.POST)
 		
 		if prescription_form.is_valid() and dosage_form.is_valid():
-			dosage_item = dosage_form.save(commit=False)
-			dosage_item.save()			
+			dosage_item = dosage_form.save()						
 			prescription_item = prescription_form.save(commit=False)
 			prescription_item.dosage = dosage_item
 			prescription_item.save()
