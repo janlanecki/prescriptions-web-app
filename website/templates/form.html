@@ -1,0 +1,17 @@
+<html>
+	<body>
+	
+	<h1>New prescription</h1>
+	<form accept-charset="UTF-8" id="new_prescription" method="post">
+    	{% csrf_token %}
+    	{{ prescription_form.as_p }}  
+    	{{ dosage_form.as_p}} 	
+		<input name="commit" type="submit"
+        	 value="Create new prescription" />
+	</form>
+	<h2>{{text}}</h2>
+
+	</body>
+</html>
+  
+  

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 
 
 class Doctor(User):
@@ -20,17 +21,9 @@ class Doctor(User):
 class Patient(User):
     """Let's assume a username is a pesel number."""
     gender = models.BooleanField() # true for man
-    pesel = models.PositiveIntegerField(max_length=11, primary_key=True)
+    pesel = models.PositiveIntegerField(primary_key=True)
     date_of_birth = models.DateField()
-    conditions = models.ManyToManyField('Condition')
-
-    class Meta:
-        indexes = [
-            models.Index(fields=['first_name', 'last_name'])
-        ]
-
-    def __str__(self):
-        return self.first_name + ' ' + self.last_name
+    conditions = models.ManyToManyField('Condition')   
 
 
 class Condition(models.Model):
@@ -46,11 +39,11 @@ class StoryEntry(models.Model):
     """Single entry in a patient's story. Holds information either only about a disease
        or about a disease and a prescription."""
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
-    doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL)
+    doctor = models.ForeignKey('Doctor', null = True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
     #story = models.ForeignKey('Story', on_delete=models.CASCADE) no 'Story' model. Is it necessary?
-    disease = models.ForeignKey('Disease', on_delete=models.SET_NULL)
-    prescription = models.ForeignKey('Prescription', null=True, on_delete=models.SET_NULL)
+    disease = models.ForeignKey('Disease', null = True, on_delete=models.SET_NULL)    
+    #prescriptions = models.ForeignKey('Prescription', null=True, on_delete=models.SET_NULL)
 
 
 class Disease(models.Model):
@@ -73,8 +66,8 @@ class Prescription(models.Model):
 
 class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
-    medication = models.ForeignKey('Medication', on_delete=models.SET_NULL)
-    dosage = models.ForeignKey('Dosage', on_delete=models.SET_NULL)
+    medication = models.ForeignKey('Medication', on_delete=models.CASCADE) 
+    dosage = models.ForeignKey('Dosage',null = True, on_delete=models.SET_NULL)
 
 
 class Dosage(models.Model):
