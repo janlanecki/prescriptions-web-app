@@ -1,6 +1,6 @@
-from django.conf.urls import url
+from django.urls import path
 from .views import FormsView
 
 urlpatterns = [
-    url(r'^$', FormsView.as_view(), name='forms'),
+    path('', FormsView.as_view(), name='forms'),
 ]
