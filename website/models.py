@@ -166,6 +166,6 @@ class Refund(models.Model):
 
 
 class Interaction(models.Model):
-    substance1 = models.ForeignKey('Substance', on_delete=models.CASCADE)
-    substance2 = models.ForeignKey('Substance', on_delete=models.CASCADE)
+    substance1 = models.ForeignKey('Substance', related_name='first', on_delete=models.CASCADE)
+    substance2 = models.ForeignKey('Substance', related_name='second', on_delete=models.CASCADE)
     severity = models.IntegerField() # 1 to 5, 5 being most severe
