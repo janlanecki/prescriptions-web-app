@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Wybierz pacjenta</h1>
+    <ul>
+    {% for patient in patients %}
+        <li>
+            <a href="/prescription/patient_id={{patient.id}}">
+                {{ patient.get_full_name }}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+</body>
+</html>
