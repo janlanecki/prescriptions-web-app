@@ -78,12 +78,10 @@ class Disease(models.Model):
         indexes = [
             models.Index(fields=['name'])
         ]
+        verbose_name = 'Disease'
 
     def __str__(self):
         return self.name
-
-    class Meta:
-        verbose_name = 'Disease'
 
 
 class Prescription(models.Model):
@@ -161,4 +159,13 @@ class Substance(models.Model):
         verbose_name = 'Substance'
 
 
-#  TODO institutions model
+class Refund(models.Model):
+    medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
+    condition = models.ForeignKey('Condition', on_delete=models.CASCADE)
+    percentage = models.FloatField() # 0% if full refund
+
+
+class Interaction(models.Model):
+    substance1 = models.ForeignKey('Substance', on_delete=models.CASCADE)
+    substance2 = models.ForeignKey('Substance', on_delete=models.CASCADE)
+    severity = models.IntegerField() # 1 to 5, 5 being most severe
