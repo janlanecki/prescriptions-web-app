@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/select_patient'
 
 WSGI_APPLICATION = 'prescriptions.wsgi.application'
 
