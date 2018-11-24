@@ -82,8 +82,8 @@ class Disease(models.Model):
 
 class Prescription(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
-    patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
-    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE)
+    patient = models.ForeignKey('Patient', on_delete=models.CASCADE, null=True)
+    doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = 'Prescription'
