@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from django.contrib.auth.models import Permission, User
 from website.forms import PrescriptionForm, DosageForm
-from website.models import Doctor
+from website.models import Doctor, Patient
 
 
 class FormsView(TemplateView):
@@ -31,7 +31,21 @@ class SelectPatientsView(TemplateView):
     template_name = "select_patient.html"
 
     def get(self, request):
-        doctor = request.user.id
-        patients = Doctor(pk=doctor).patients.all()
-        print(patients)
+        doctor_id = request.user.id
+        patients = Doctor.objects.get(id=doctor_id).patients.all()
         return render(request, self.template_name, {'patients': patients})
+
+
+class CreatePrescriptionView(TemplateView):
+    template_name='prescription.html'
+
+    def get(self, request, patient_id):
+        patient = Patient.objects.get(id=patient_id)
+        return render(request, self.template_name, {
+            'patient_name': patient.get_full_name,
+            'gender': patient.gender,
+            'pesel': patient.pesel,
+            'date_of_birth': patient.date_of_birth
+
+        })
+

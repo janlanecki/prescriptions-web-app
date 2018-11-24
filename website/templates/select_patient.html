@@ -5,9 +5,8 @@
     <ul>
     {% for patient in patients %}
         <li>
-            <a href="/prescription/{{patient.id}}">
+            <a href="/prescription/patient_id={{patient.id}}">
                 {{ patient.get_full_name }}
-
             </a>
         </li>
     {% endfor %}

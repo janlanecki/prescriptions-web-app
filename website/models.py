@@ -15,6 +15,9 @@ class Patient(User):
     date_of_birth = models.DateField()
     conditions = models.ManyToManyField('Condition', blank=True)
 
+    def __str__(self):
+        return "ID " + str(self.id)
+
     class Meta:
         verbose_name = 'Patient'
 
