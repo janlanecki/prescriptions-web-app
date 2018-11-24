@@ -32,12 +32,12 @@ class Doctor(User):
         ('F', 'Female'),
         ('O', 'Other')
     )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
-    title = models.CharField(max_length=2, choices=TITLES, default=TITLES[0][0])
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    title = models.CharField(max_length=10, choices=TITLES, default=TITLES[0][0])
     patients = models.ManyToManyField(Patient, blank=True)
 
     def __str__(self):
-        return self.title[1] + ' ' + self.first_name + ' ' + self.last_name
+        return self.get_title_display() + ' ' + self.first_name + ' ' + self.last_name
 
     class Meta:
         verbose_name = 'Doctor'
