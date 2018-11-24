@@ -10,6 +10,9 @@ class Patient(User):
     date_of_birth = models.DateField()
     conditions = models.ManyToManyField('Condition')
 
+    class Meta:
+        verbose_name = 'Patient'
+
 
 class Doctor(User):
     """Let's assume a username is a doctor's number needed for receipt."""
@@ -26,6 +29,9 @@ class Doctor(User):
     def __str__(self):
         return self.title[1] + ' ' + self.first_name + ' ' + self.last_name
 
+    class Meta:
+        verbose_name = 'Doctor'
+
 
 class Condition(models.Model):
     """A condition of a patient making him eligible for a refund."""
@@ -34,6 +40,9 @@ class Condition(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Condition'
 
 
 class StoryEntry(models.Model):
@@ -45,6 +54,9 @@ class StoryEntry(models.Model):
     #story = models.ForeignKey('Story', on_delete=models.CASCADE) no 'Story' model. Is it necessary?
     disease = models.ForeignKey('Disease', null = True, on_delete=models.SET_NULL)    
     #prescriptions = models.ForeignKey('Prescription', null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = 'Story Entry'
 
 
 class Disease(models.Model):
@@ -60,16 +72,25 @@ class Disease(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Disease'
+
 
 class Prescription(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
     story = models.ForeignKey('StoryEntry', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Prescription'
 
 
 class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
     medication = models.ForeignKey('Medication', on_delete=models.CASCADE) 
     dosage = models.ForeignKey('Dosage',null = True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = 'PrescriptionEntry'
 
 
 class Dosage(models.Model):
@@ -101,6 +122,9 @@ class Dosage(models.Model):
             dosage += 'co ' + str(self.days_between_doses) + ' dni'
         return dosage + self.time_of_day + self.eating_relation
 
+    class Meta:
+        verbose_name = 'Dosage'
+
 
 class Medication(models.Model):
     FORM = (
@@ -114,11 +138,17 @@ class Medication(models.Model):
     amount = models.PositiveIntegerField()
     mg_of_active_substance = models.PositiveIntegerField()
 
+    class Meta:
+        verbose_name = 'Medication'
+
 
 class Substance(models.Model):
     """Active substance checked when checking interactions"""
     id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=150)
+
+    class Meta:
+        verbose_name = 'Substance'
 
 
 #  TODO institutions model
