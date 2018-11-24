@@ -62,7 +62,8 @@ class StoryEntry(models.Model):
     disease = models.ForeignKey('Disease', null=True, on_delete=models.SET_NULL)
 
     class Meta:
-        verbose_name = 'Story Entry'
+        verbose_name = 'StoryEntry'
+        verbose_name_plural = 'StoryEntries'
 
 
 class Disease(models.Model):
@@ -96,6 +97,7 @@ class PrescriptionEntry(models.Model):
 
     class Meta:
         verbose_name = 'PrescriptionEntry'
+        verbose_name_plural = 'PrescriptionEntries'
 
 
 class Dosage(models.Model):
