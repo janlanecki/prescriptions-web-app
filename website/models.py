@@ -12,7 +12,10 @@ class Patient(User):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     pesel = models.PositiveIntegerField(primary_key=True)
     date_of_birth = models.DateField()
-    conditions = models.ManyToManyField('Condition')
+    conditions = models.ManyToManyField('Condition', null=True)
+
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
 
     class Meta:
         verbose_name = 'Patient'
@@ -72,14 +75,14 @@ class Disease(models.Model):
     code = models.CharField(max_length=5, primary_key=True)
     name = models.CharField(max_length=150)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         indexes = [
             models.Index(fields=['name'])
         ]
         verbose_name = 'Disease'
-
-    def __str__(self):
-        return self.name
 
 
 class Prescription(models.Model):
@@ -128,7 +131,7 @@ class Dosage(models.Model):
             dosage += ' dziennie'
         else:
             dosage += 'co ' + str(self.days_between_doses) + ' dni'
-        return dosage + self.time_of_day + self.eating_relation
+        return dosage + self.time_of_day[1] + self.eating_relation[1]
 
     class Meta:
         verbose_name = 'Dosage'
