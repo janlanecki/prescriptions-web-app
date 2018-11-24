@@ -17,11 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from website.views import SelectPatientsView
 from django.contrib.auth import views
+from website.views import FormsView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', views.LoginView.as_view()),
     path('select_patient', SelectPatientsView.as_view(), name='select_patients'),
+    path('prescription/<int:patient_id>', FormsView.as_view(), name='forms'),
+
     path('', include('website.urls')),
 ]
 
