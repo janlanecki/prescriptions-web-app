@@ -8,7 +8,6 @@ class Patient(User):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
-        ('O', 'Other')
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     pesel = models.PositiveIntegerField(primary_key=True)
@@ -30,11 +29,10 @@ class Doctor(User):
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
-        ('O', 'Other')
     )
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    title = models.CharField(max_length=10, choices=TITLES, default=TITLES[0][0])
-    patients = models.ManyToManyField(Patient, blank=True)
+    title = models.CharField(max_length=2, choices=TITLES, default=TITLES[0][0])
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+    patients = models.ManyToManyField('Patient', blank=True)
 
     def __str__(self):
         return self.get_title_display() + ' ' + self.first_name + ' ' + self.last_name
@@ -59,11 +57,9 @@ class StoryEntry(models.Model):
     """Single entry in a patient's story. Holds information either only about a disease
        or about a disease and a prescription."""
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
-    doctor = models.ForeignKey('Doctor', null = True, on_delete=models.SET_NULL)
+    doctor = models.ForeignKey('Doctor', null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
-    #story = models.ForeignKey('Story', on_delete=models.CASCADE) no 'Story' model. Is it necessary?
-    disease = models.ForeignKey('Disease', null = True, on_delete=models.SET_NULL)    
-    #prescriptions = models.ForeignKey('Prescription', null=True, on_delete=models.SET_NULL)
+    disease = models.ForeignKey('Disease', null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'Story Entry'
@@ -78,17 +74,16 @@ class Disease(models.Model):
         indexes = [
             models.Index(fields=['name'])
         ]
+        verbose_name = 'Disease'
 
     def __str__(self):
         return self.name
 
-    class Meta:
-        verbose_name = 'Disease'
-
 
 class Prescription(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
-    story = models.ForeignKey('StoryEntry', on_delete=models.CASCADE)
+    patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
+    doctor = models.ForeignKey('Doctor', on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'Prescription'
@@ -96,8 +91,8 @@ class Prescription(models.Model):
 
 class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
-    medication = models.ForeignKey('Medication', on_delete=models.CASCADE) 
-    dosage = models.ForeignKey('Dosage',null = True, on_delete=models.SET_NULL)
+    medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
+    dosage = models.ForeignKey('Dosage', null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = 'PrescriptionEntry'
@@ -161,4 +156,19 @@ class Substance(models.Model):
         verbose_name = 'Substance'
 
 
-#  TODO institutions model
+class Refund(models.Model):
+    medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
+    condition = models.ForeignKey('Condition', on_delete=models.CASCADE)
+    percentage = models.FloatField() # 0% if full refund
+
+    class Meta:
+        verbose_name = 'Refund'
+
+
+class Interaction(models.Model):
+    substance1 = models.ForeignKey('Substance', related_name='first', on_delete=models.CASCADE)
+    substance2 = models.ForeignKey('Substance', related_name='second', on_delete=models.CASCADE)
+    severity = models.IntegerField() # 1 to 5, 5 being most severe
+
+    class Meta:
+        verbose_name = 'Interaction'
