@@ -60,6 +60,7 @@ class StoryEntry(models.Model):
     doctor = models.ForeignKey('Doctor', null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
     disease = models.ForeignKey('Disease', null=True, on_delete=models.SET_NULL)
+    description = models.TextField(max_length=500, null=True)
 
     class Meta:
         verbose_name = 'StoryEntry'
