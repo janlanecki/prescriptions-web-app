@@ -3,6 +3,14 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 
 
+class Patient(User):
+    """Let's assume a username is a pesel number."""
+    gender = models.BooleanField() # true for man
+    pesel = models.PositiveIntegerField(primary_key=True)
+    date_of_birth = models.DateField()
+    conditions = models.ManyToManyField('Condition')
+
+
 class Doctor(User):
     """Let's assume a username is a doctor's number needed for receipt."""
     TITLES = (
@@ -13,17 +21,10 @@ class Doctor(User):
     )
     gender = models.BooleanField()  # true for Mr./false for Ms.
     title = models.CharField(max_length=2, choices=TITLES, default=TITLES[0][0])
+    patients = models.ManyToManyField(Patient)
 
     def __str__(self):
-        return self.title + ' ' + self.first_name + ' ' + self.last_name
-
-
-class Patient(User):
-    """Let's assume a username is a pesel number."""
-    gender = models.BooleanField() # true for man
-    pesel = models.PositiveIntegerField(primary_key=True)
-    date_of_birth = models.DateField()
-    conditions = models.ManyToManyField('Condition')   
+        return self.title[1] + ' ' + self.first_name + ' ' + self.last_name
 
 
 class Condition(models.Model):
