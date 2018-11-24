@@ -54,7 +54,8 @@ class Disease(models.Model):
     class Meta:
         indexes = [
             models.Index(fields=['name'])
-        ]  
+        ]
+
     def __str__(self):
         return self.name
 
