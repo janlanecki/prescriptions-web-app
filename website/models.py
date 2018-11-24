@@ -13,7 +13,7 @@ class Patient(User):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     pesel = models.PositiveIntegerField(primary_key=True)
     date_of_birth = models.DateField()
-    conditions = models.ManyToManyField('Condition')
+    conditions = models.ManyToManyField('Condition', blank=True)
 
     class Meta:
         verbose_name = 'Patient'
@@ -34,7 +34,7 @@ class Doctor(User):
     )
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
     title = models.CharField(max_length=10, choices=TITLES, default=TITLES[0][0])
-    patients = models.ManyToManyField(Patient, blank=True)
+    patients = models.ManyToManyField(Patient, blank=True, symmetrical=False)
 
     def __str__(self):
         return self.get_title_display() + ' ' + self.first_name + ' ' + self.last_name
