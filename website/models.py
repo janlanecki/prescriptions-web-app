@@ -5,7 +5,12 @@ from django.forms import ModelForm
 
 class Patient(User):
     """Let's assume a username is a pesel number."""
-    gender = models.BooleanField() # true for man
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other')
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     pesel = models.PositiveIntegerField(primary_key=True)
     date_of_birth = models.DateField()
     conditions = models.ManyToManyField('Condition')
@@ -22,12 +27,17 @@ class Doctor(User):
         ('DH', 'dr hab. n. med.'),
         ('PR', 'prof. dr hab. n. med.'),
     )
-    gender = models.BooleanField()  # true for Mr./false for Ms.
-    title = models.CharField(max_length=2, choices=TITLES, default=TITLES[0][0])
-    patients = models.ManyToManyField(Patient)
+    GENDER_CHOICES = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other')
+    )
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
+    title = models.CharField(max_length=10, choices=TITLES, default=TITLES[0][0])
+    patients = models.ManyToManyField(Patient, blank=True)
 
     def __str__(self):
-        return self.title[1] + ' ' + self.first_name + ' ' + self.last_name
+        return self.get_title_display() + ' ' + self.first_name + ' ' + self.last_name
 
     class Meta:
         verbose_name = 'Doctor'
