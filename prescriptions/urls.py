@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from website.views import SelectPatientsView
+from django.contrib.auth import views
+from website.views import CreatePrescriptionView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', views.LoginView.as_view()),
+    path('select_patient', SelectPatientsView.as_view(), name='select_patients'),
+    path('prescription/patient_id=<patient_id>', CreatePrescriptionView.as_view()),
+
     path('', include('website.urls')),
 ]
