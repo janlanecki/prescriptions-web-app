@@ -62,11 +62,13 @@ class StoryEntry(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE)
     doctor = models.ForeignKey('Doctor', null=True, on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
-    disease = models.ForeignKey('Disease', null=True, on_delete=models.SET_NULL)
+    disease = models.ForeignKey('Disease', blank=True, null=True, on_delete=models.SET_NULL)
     description = models.TextField(max_length=500, null=True)
 
     def __str__(self):
-        return self.doctor.last_name + ' -> ' + self.patient.last_name + ' "' + self.disease + '"'
+        if self.disease is None:
+            return self.doctor.last_name + ' -> ' + self.patient.last_name + ' "' + self.description + '"'
+        return self.doctor.last_name + ' -> ' + self.patient.last_name + ' "' + self.disease.name + '"'
 
     class Meta:
         verbose_name = 'StoryEntry'
@@ -92,9 +94,10 @@ class Prescription(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, null=True)
     doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, null=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.doctor.last_name + ' -> ' + self.patient.last_name
+        return self.doctor.last_name + ' -> ' + self.patient.last_name + ' ' + str(self.date.day) + '-' + str(self.date.month) + '-' + str(self.date.year)
 
     class Meta:
         verbose_name = 'Prescription'
@@ -104,7 +107,11 @@ class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
     medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
     dosage = models.ForeignKey('Dosage', null=True, on_delete=models.SET_NULL)
+<<<<<<< Updated upstream
     refund = models.ForeignKey('Refund', null=True, on_delete=models.SET_NULL)
+=======
+    refund = models.ForeignKey('Refund', on_delete=models.CASCADE, null=True, blank=True)
+>>>>>>> Stashed changes
 
     def __str__(self):
         return self.medication.name
@@ -134,14 +141,12 @@ class Dosage(models.Model):
     def __str__(self):
         dosage = self.unit + ' '
         if self.doses_per_day == 1:
-            dosage += '1 raz'
+            dosage += '1 raz dziennie'
         else:
-            dosage += str(self.doses_per_day) + ' razy'
-        if self.days_between_doses == 0:
-            dosage += ' dziennie'
-        else:
-            dosage += 'co ' + str(self.days_between_doses) + ' dni'
-        return dosage + self.time_of_day[1] + self.eating_relation[1]
+            dosage += str(self.doses_per_day) + ' razy dziennie'
+        if self.days_between_doses != 0:
+            dosage += ' co ' + str(self.days_between_doses) + ' dni'
+        return dosage + ' ' + self.get_time_of_day_display() + ' ' + self.get_eating_relation_display()
 
     class Meta:
         verbose_name = 'Dosage'
@@ -151,6 +156,10 @@ class Medication(models.Model):
     FORM = (
         ('TB', 'tabletki'),
         ('ZS', 'zastrzyki'),
+        ('KR', 'krople'),
+        ('KP', 'kapsulki'),
+        ('AM', 'ampulki'),
+        ('FL', 'fiolki'),
     )
     id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=150)
@@ -160,7 +169,7 @@ class Medication(models.Model):
     mg_of_active_substance = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.name + " " + self.amount + self.form + ' ' + self.mg_of_active_substance + 'mg'
+        return self.name + " " + str(self.amount) + self.get_form_display() + ' ' + str(self.mg_of_active_substance) + 'mg'
 
     class Meta:
         verbose_name = 'Medication'
@@ -180,11 +189,11 @@ class Substance(models.Model):
 
 class Refund(models.Model):
     medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
-    condition = models.ForeignKey('Condition', on_delete=models.CASCADE)
+    condition = models.ForeignKey('Condition', blank=True, null=True, on_delete=models.CASCADE)
     percentage = models.FloatField() # 0% if full refund
 
     def __str__(self):
-        return self.medication + ' on ' + self.percentage + '%'
+        return self.medication.name + ' on ' + str(self.percentage) + '%'
 
     class Meta:
         verbose_name = 'Refund'
@@ -195,8 +204,8 @@ class Interaction(models.Model):
     substance2 = models.ForeignKey('Substance', related_name='second', on_delete=models.CASCADE)
     severity = models.IntegerField() # 1 to 5, 5 being most severe
 
-    def __init__(self):
-        return self.substance1 + ' + ' + self.substance2 + ' = ' + self.severity
+    def __str__(self):
+        return self.substance1.name + ' + ' + self.substance2.name + ' = ' + str(self.severity)
 
     class Meta:
         verbose_name = 'Interaction'
