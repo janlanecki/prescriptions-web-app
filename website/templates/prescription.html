@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+        <head>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        </head>
 <body>
 
     <h1>Kreator recepty</h1>
@@ -11,13 +14,26 @@
 
 <form id="prescriptions_form">
     <label for="name">Lek 1.:</label>
-    <input type="text" id="name1" value="" style="display:block" />
+    <select id = "name1" style = "display:block">
+            <option id="13" value="Abelcet">Abelcet (10 fiolki 20mg)</option>
+            <option id="12" value="Abasaglar">Abasaglar (10 ampulki 100mg)</option>
+            <option id="6" value="Convulex">Convulex (100 kapsulki 500mg)</option>
+            <option id="2" value="Ibuprom">Ibuprom (50 tabletki 200mg)</option>
+    </select>
 
     <label for="name">Dawka:</label>
-    <input type="text" id="dosage1" value="" style="display:block"/>
+    <select id="dosage1" style = "display:block">
+            <option id="1" value="tabletka 1 raz dziennie">tabletka 1 raz dziennie</option>
+            <option id="2" value="kapsulka 1 raz dziennie">kapsulka 1 raz dziennie</option>
+            <option id="3" value="kapsulka 2 razy dziennie">kapsulka 2 razy dziennie rano</option>
+    </select>
 
     <label for="name">Refundacja:</label>
-    <input type="text" id="refund1" value="" style="display:block"/>
+    <select id="refund1" style = "display:block">
+            <option id="4" value="30">30%</option>
+            <option id="5" value="10">10%</option>
+            <option id="6" value="60">60%</option>
+    </select>
 </form>
 <br><br>
 
@@ -25,32 +41,34 @@
 <input type="button" value="Stwórz receptę" id="create_prescription"></button><br>
 <input type="button" value="Załaduj poprzednią receptę" id="load_last_prescription"></button>
 
-<script type="text/javascript" rc="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" >
+<script type="text/javascript" >
     var next = 2;
     var form = document.getElementById("prescriptions_form");
-    
+
     document.getElementById("add_medicine").addEventListener("click", function(){
             var name_label = document.createElement("label");
             name_label.id = "name"+next;
             name_label.innerHTML = "Lek: "+next;
             form.appendChild(name_label);
 
-            var medicine_name = document.createElement("input");
-            medicine_name.type = "text";
+            var medicine_name = document.createElement("select");
             medicine_name.id = "name"+next;
             medicine_name.value = "";
             medicine_name.style = "display: block";
+            var option = document.createElement("option");
+            medicine_name.appendChild(option);
             form.appendChild(medicine_name);
+
             var dosage_label = document.createElement("label");
             dosage_label.id = "dosage"+next;
             dosage_label.innerHTML = "Dawka:";
             form.appendChild(dosage_label);
 
-            var dosage_name = document.createElement("input");
-            dosage_name.type = "text";
+            var dosage_name = document.createElement("select");
             dosage_name.id = "dosage"+next;
             dosage_name.value = "";
             dosage_name.style = "display: block";
+            medicine_name.appendChild(option);
             form.appendChild(dosage_name);
 
             var refund_label = document.createElement("label");
@@ -58,71 +76,122 @@
             refund_label.innerHTML = "Refundacja: ";
             form.appendChild(refund_label);
 
-            var refund_name = document.createElement("input");
-            refund_name.type = "text";
+            var refund_name = document.createElement("select");
             refund_name.id = "refund"+next;
             refund_name.value = "";
             refund_name.style = "display: block";
+            medicine_name.appendChild(option);
             form.appendChild(refund_name);
 
             next = next +1;
     });
 
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+        let cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+        let cookie = jQuery.trim(cookies[i]);
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+        }
+        }
+        }
+        return cookieValue;
+    }
+
     document.getElementById("create_prescription").addEventListener("click", function(){
             var xhr = new XMLHttpRequest();
             var url = document.URL + "/api/add_prescription";
-            
+
             console.log(url);
             var medicine_names = [];
             var dosages = [];
             var refunds = [];
-            
+
             var form = document.getElementById("prescriptions_form");
             //Select all input elements with defined value
-            var inputs = form.querySelectorAll('input');
+            var inputs = form.querySelectorAll("select");
+            console.log("*********")
             console.log(inputs);
+
             var jsonPrescription = {};
-            
             function addToJson(element, index, array){
-                if(element.value != "")
-                    jsonPrescription[element.id] = element.value;
+                    jsonPrescription[String(element.id)] = String(element.options[element.selectedIndex].id);
             }
             inputs.forEach(addToJson);
-            
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            var data = JSON.stringify(jsonPrescription);
-            xhr.send(data);
-            
+            console.log(JSON.stringify(jsonPrescription));
 
-    });
-    /*
-    $(document).ready(function() {
-        $("#load_last_prescription").click(function(){
-            $.post(document.URL + "/api/load_last_prescription", data,
-                function(data, status){
-
-                    var names = ["name", "dosage", "refund"];
-                    var form = document.getElementById("prescriptions_form");
-                    
-                    for(var i=1; 
-                        data.has("name"+i) && data.has("dosage"+i) && data.has("refund"+i);
-                        i++){
-                            name = 
-                            fill_document(name, dosage, refund, i);
-                        }
-                    
-                    function fill_document(name, dosage, refund, i){
-                        if(i>1){
-                            $("#add_medicine").trigger("click");
-                        }
-                        $("#")
+            let csrftoken = getCookie("csrftoken");
+                $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
                     }
                 }
-            )
-        });
+            });
+
+            $.ajax({
+                type: "POST",
+                data: jsonPrescription,
+                url: url,
+                success: function(data) {
+                    alert("Dodano");
+                },
+                error: function(xhr) {
+                    alert("request failed");
+                }
+            });
+
+
     });
+
+    /*
+    Helper function to add text inputs and set values.
+    Executed by #load_last_prescription event listener.
     */
+    function fill_document(name, dosage, refund, i){
+        if(i>1){
+            $("#add_medicine").trigger("click");
+        }
+        $("#name"+i).value = name;
+        $("#dosage"+i).value = dosage;
+        $("#refund"+i).value = refund;
+    }
+
+
+
+    document.getElementById("load_last_prescription").addEventListener("click", function(){
+            var data;
+            $.post(document.URL + "/api/load_last_prescription", data,
+                function(data, status){
+                    var name, dosage, refund;
+                    if(status === "200"){
+                        for(var i=1;
+                            data.has("name"+i) && data.has("dosage"+i) && data.has("refund"+i);
+                            i++){
+                                name = data["name" + i];
+                                dosage = data["dosage" + i];
+                                refund = data["refund" + i];
+                                fill_document(name, dosage, refund, i);
+                            }
+                    }
+                    else{
+                        console.log("No data recieved from Prescriptions API.");
+                        errormessage();
+                    }
+                }
+            );
+    });
+
+
 
 
     

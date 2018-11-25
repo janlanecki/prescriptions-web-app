@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import FormsView
+from . import views
 from django.contrib import admin
 
 urlpatterns = [
-    path('prescription', FormsView.as_view(), name='forms'),
+    path('prescription/patient_id=<patient_id>/api/add_prescription', views.post)
 ]
