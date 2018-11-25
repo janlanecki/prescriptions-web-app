@@ -1,0 +1,186 @@
+body, *, *:before, *:after {
+    box-sizing: border-box;
+}
+
+*, *::after, *::before {
+    box-sizing: inherit;
+  }
+
+html, body {
+    font-family: helvetica, sans-serif;
+    font-size: 16px;
+    color: #fff;
+}
+
+body {
+    background-image: url("med.jpg");
+}
+
+body > div {
+    display: block;
+    background: rgba(255, 255, 255, 0.6);
+    height: 100%;
+    padding: 0.5rem;
+    margin: 0 5%;
+}
+
+.fixed-width {
+    width: 1150px;
+    margin: 0 auto;
+}
+
+.data-block {
+    margin-bottom: 3rem;
+}
+
+h1, h2, h3, h4, h5, h6 .title {
+    font-family: helvetica, sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 0 1rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    font-size: 1.4rem;
+}
+
+a:hover {
+    color: #a8a8a8;
+    text-decoration: underline; 
+}
+
+p {
+    margin: 0.5rem 0;
+    line-height: 1.3rem;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/*********************************************
+HEADER 
+*********************************************/
+
+.page-header {
+    padding-bottom: 2rem;
+}
+
+.page-header h1 {
+    position: absolute;
+    overflow: hidden;
+    top: -100%;
+    left: -100%;
+}
+
+.page-header > div {
+    position: relative;
+}
+
+.page-header nav {
+    float: right;
+    font-family: helvetica, sans-serif;
+    text-transform: uppercase;
+}
+
+.page-header nav li {
+    color: #fff;
+    float: left;
+    margin-right: 2rem;
+    padding-top: 3rem; 
+}
+
+.page-header nav li:last-child {
+    margin-right: 0;
+}
+
+.page-header .logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 3.5rem;
+    position: absolute;
+    bottom: 0;
+}
+
+/*********************************************
+PRESCRIPTION 
+*********************************************/
+
+#nazwaStrony {
+    text-align: center;
+}
+
+#imieNazwisko {
+    font-size: 30px;
+    text-align: center;
+}
+
+#danePacjenta {
+    color: #474747;
+    display: block;
+    margin: 2rem;
+}
+
+#prescriptions_form {
+    display: block;
+    background: rgba(255, 255, 255);
+    color: #474747;
+    font-weight: bold;
+    width: 40%;
+    padding: 0.8rem;
+    border-radius: 6px;
+    margin: 2% auto;
+}
+
+form > * {
+    margin: 0.5rem 0;
+    line-height: 1.3rem;
+}
+
+form label {
+    display: block;
+}
+
+form select {
+    display: block;
+    width: 100%;
+    height: 2rem;
+    padding: 0.5rem;
+    border: solid 1px #a8a8a8;
+    border-radius: 2px;
+    text-align: left;
+}
+
+.button {
+    border: none;
+    display: block;
+    padding: 1rem;
+    font-size: inherit;
+    font-weight: bold;
+    color: #474747;
+    border-radius: 4px;
+}
+
+.button:hover {    
+    box-shadow: 2px 2px #a8a8a8;
+}
+
+#add_medicine {
+    padding: 1rem 1.3rem;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 6px;
+    margin-left: 49.2rem;
+    background-color: #fff;
+    color: #474747;
+}
+
+#create_prescription {
+    background-color: #fff;
+    color: #474747;
+    margin: 0 30% 2rem;
+}

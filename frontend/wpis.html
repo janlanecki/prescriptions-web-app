@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatibile" content="IE=edge" />
+    <title>Prescriptio</title>
+    <!-- clearfix -->
+    <link rel="stylesheet" href="https://meyerweb.com/eric/tools/css/reset/reset.css">
+    <!-- fonts Economica & Pacifico -->
+    <link href="https://fonts.googleapis.com/css?family=Economica:400,700|Pacifico" rel="stylesheet">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="wpis_styl.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="fixed-width clearfix">
+            <em class="logo">Prescriptio</em>
+            <h1>Homepage</h1>
+            <nav>
+                <ul>
+                    <li><a href="#">Nowy wpis</a></li>
+                    <li><a href="recepta.html">Nowa recepta</a></li>
+                    <li><a href="lista.html">Lista</a></li>
+                    <li><a href="#"><i class="fas fa-user-md"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div>
+        <section id="danePacjenta">
+            <h1 id="nazwaStrony">Pacjent</h1>
+            <h2 id="imieNazwisko" >{{patient_name}}</h2>
+        </section>
+
+
+        <form id="prescriptions_form">
+            <label for="name">Objawy:</label>
+            <textarea id="textareaObjawy"></textarea>
+
+            <label for="name">Choroba:</label>
+            <select id="choroba">
+                <option value="0" selected></option>
+                <option value="1">choroba1</option>
+                <option value="2">choroba2</option>
+                <option value="3">choroba3</option>
+            </select>
+        </form>
+        
+        <input type="submit" value="+" id="add_medicine" class="button">
+        <input type="submit" value="Stwórz wpis" id="create_prescription" class="button">
+    </div>
+
+    <script type="text/javascript">
+            var next = 2;
+            var form = document.getElementById("prescriptions_form");
+            
+            document.getElementById("add_medicine").addEventListener("click", function(){
+                    var name_label = document.createElement("label");
+                    name_label.id = "name"+next;
+                    name_label.innerHTML = "Lek: "+next;
+                    form.appendChild(name_label);
+
+                    var medicine_name = document.createElement("input");
+                    medicine_name.type = "text";
+                    medicine_name.id = "name"+next;
+                    medicine_name.value = "";
+                    medicine_name.style = "display: block";
+                    form.appendChild(medicine_name);
+                    var dosage_label = document.createElement("label");
+                    dosage_label.id = "dosage"+next;
+                    dosage_label.innerHTML = "Dawka:";
+                    form.appendChild(dosage_label);
+
+                    var dosage_name = document.createElement("input");
+                    dosage_name.type = "text";
+                    dosage_name.id = "dosage"+next;
+                    dosage_name.value = "";
+                    dosage_name.style = "display: block";
+                    form.appendChild(dosage_name);
+
+                    var refund_label = document.createElement("label");
+                    refund_label.id = "refund"+next;
+                    refund_label.innerHTML = "Refundacja: ";
+                    form.appendChild(refund_label);
+
+                    var refund_name = document.createElement("input");
+                    refund_name.type = "text";
+                    refund_name.id = "name"+next;
+                    refund_name.value = "";
+                    refund_name.style = "display: block";
+                    form.appendChild(refund_name);
+
+                    next = next +1;
+            });
+
+            document.getElementById("create_prescription").addEventListener("click", function(){
+                    var xhr = new XMLHttpRequest();
+                    var url = document.URL + "/api/add_prescription";
+                    
+                    console.log(url);
+                    var medicine_names = [];
+                    var dosages = [];
+                    var refunds = [];
+                    
+                    var form = document.getElementById("prescriptions_form");
+                    //Select all input elements with defined value
+                    var inputs = form.querySelectorAll('input');
+                    console.log(inputs);
+                    var jsonPrescription = {};
+                    
+                    function addToJson(element, index, array){
+                        if(element.value != "")
+                            jsonPrescription[element.id] = element.value;
+                    }
+                    inputs.forEach(addToJson);
+                    
+                    xhr.open("POST", url, true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    var data = JSON.stringify(jsonPrescription);
+                    xhr.send(data);
+            }); 
+    </script>
+
+</body>
+</html>
