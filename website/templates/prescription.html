@@ -7,6 +7,64 @@
     <h3>    Płeć           : {{gender}}</h3>
     <h3>    Data urodzenia : {{date_of_birth}}</h3>
 
+<form id="prescriptions_form">
+<label for="name">Lek 1.:</label>
+<input type="text" id="name1" value="" style="display:block" />
 
+<label for="name">Dawka:</label>
+<input type="text" id="dosage1" value="" style="display:block"/>
+
+<label for="name">Refundacja:</label>
+<input type="text" id="refund1" value="" style="display:block"/>
+</form>
+<br><br>
+
+<input type="button" value="Dodaj kolejny lek" id="p" /><br><br>
+<button type="submit">Stwórz receptę.</button><br>
+
+<script type="text/javascript">
+    var next = 2;
+    var form = document.getElementById("prescriptions_form");
+    document.getElementById("p").addEventListener("click", function(){
+
+    var name_label = document.createElement("label");
+    name_label.id = "name"+next;
+    name_label.innerHTML = "Lek "+next;
+    form.appendChild(name_label);
+
+    var medicine_name = document.createElement("input");
+    medicine_name.type = "text";
+    medicine_name.id = "name"+next;
+    medicine_name.value = "";
+    medicine_name.style = "display: block";
+    form.appendChild(medicine_name);
+    var dosage_label = document.createElement("label");
+    dosage_label.id = "dosage"+next;
+    dosage_label.innerHTML = "Dawka :"+"br";
+    form.appendChild(dosage_label);
+
+    var dosage_name = document.createElement("input");
+    dosage_name.type = "text";
+    dosage_name.id = "dosage"+next;
+    dosage_name.value = "";
+    dosage_name.style = "display: block";
+    form.appendChild(dosage_name);
+
+    var refund_label = document.createElement("label");
+    refund_label.id = "refund"+next;
+    refund_label.innerHTML = "Refundacja: ";
+    form.appendChild(refund_label);
+
+    var refund_name = document.createElement("input");
+    refund_name.type = "text";
+    refund_name.id = "name"+next;
+    refund_name.value = "";
+    refund_name.style = "display: block";
+    form.appendChild(refund_name);
+
+    next = next +1;
+
+    });
+</script>
 </body>
 </html>
