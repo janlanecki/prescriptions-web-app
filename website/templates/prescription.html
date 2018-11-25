@@ -21,10 +21,11 @@
 </form>
 <br><br>
 
-<input type="button" value="Dodaj kolejny lek" id="add_medicine" /><br><br>
+<input type="button" value="Dodaj kolejny lek" id="add_medicine" /><br>
 <input type="button" value="Stwórz receptę" id="create_prescription"></button><br>
+<input type="button" value="Załaduj poprzednią receptę" id="load_last_prescription"></button>
 
-<script type="text/javascript">
+<script type="text/javascript" rc="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" >
     var next = 2;
     var form = document.getElementById("prescriptions_form");
     
@@ -59,7 +60,7 @@
 
             var refund_name = document.createElement("input");
             refund_name.type = "text";
-            refund_name.id = "name"+next;
+            refund_name.id = "refund"+next;
             refund_name.value = "";
             refund_name.style = "display: block";
             form.appendChild(refund_name);
@@ -95,6 +96,34 @@
             
 
     });
+    /*
+    $(document).ready(function() {
+        $("#load_last_prescription").click(function(){
+            $.post(document.URL + "/api/load_last_prescription", data,
+                function(data, status){
+
+                    var names = ["name", "dosage", "refund"];
+                    var form = document.getElementById("prescriptions_form");
+                    
+                    for(var i=1; 
+                        data.has("name"+i) && data.has("dosage"+i) && data.has("refund"+i);
+                        i++){
+                            name = 
+                            fill_document(name, dosage, refund, i);
+                        }
+                    
+                    function fill_document(name, dosage, refund, i){
+                        if(i>1){
+                            $("#add_medicine").trigger("click");
+                        }
+                        $("#")
+                    }
+                }
+            )
+        });
+    });
+    */
+
 
     
 </script>

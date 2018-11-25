@@ -104,7 +104,7 @@ class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
     medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
     dosage = models.ForeignKey('Dosage', null=True, on_delete=models.SET_NULL)
-    refund = models.ForeignKey('Refund', on_delete=models.SET_NULL)
+    refund = models.ForeignKey('Refund', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.medication.name
