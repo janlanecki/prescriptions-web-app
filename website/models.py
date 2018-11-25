@@ -65,6 +65,9 @@ class StoryEntry(models.Model):
     disease = models.ForeignKey('Disease', null=True, on_delete=models.SET_NULL)
     description = models.TextField(max_length=500, null=True)
 
+    def __str__(self):
+        return self.doctor.last_name + ' -> ' + self.patient.last_name + ' "' + self.disease + '"'
+
     class Meta:
         verbose_name = 'StoryEntry'
         verbose_name_plural = 'StoryEntries'
@@ -90,6 +93,9 @@ class Prescription(models.Model):
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, null=True)
     doctor = models.ForeignKey('Doctor', on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return self.doctor.last_name + ' -> ' + self.patient.last_name
+
     class Meta:
         verbose_name = 'Prescription'
 
@@ -98,6 +104,10 @@ class PrescriptionEntry(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
     medication = models.ForeignKey('Medication', on_delete=models.CASCADE)
     dosage = models.ForeignKey('Dosage', null=True, on_delete=models.SET_NULL)
+    refund = models.ForeignKey('Refund', on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.medication.name
 
     class Meta:
         verbose_name = 'PrescriptionEntry'
@@ -149,6 +159,9 @@ class Medication(models.Model):
     amount = models.PositiveIntegerField()
     mg_of_active_substance = models.PositiveIntegerField()
 
+    def __str__(self):
+        return self.name + " " + self.amount + self.form + ' ' + self.mg_of_active_substance + 'mg'
+
     class Meta:
         verbose_name = 'Medication'
 
@@ -157,6 +170,9 @@ class Substance(models.Model):
     """Active substance checked when checking interactions"""
     id = models.PositiveIntegerField(primary_key=True)
     name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Substance'
@@ -167,6 +183,9 @@ class Refund(models.Model):
     condition = models.ForeignKey('Condition', on_delete=models.CASCADE)
     percentage = models.FloatField() # 0% if full refund
 
+    def __str__(self):
+        return self.medication + ' on ' + self.percentage + '%'
+
     class Meta:
         verbose_name = 'Refund'
 
@@ -175,6 +194,9 @@ class Interaction(models.Model):
     substance1 = models.ForeignKey('Substance', related_name='first', on_delete=models.CASCADE)
     substance2 = models.ForeignKey('Substance', related_name='second', on_delete=models.CASCADE)
     severity = models.IntegerField() # 1 to 5, 5 being most severe
+
+    def __init__(self):
+        return self.substance1 + ' + ' + self.substance2 + ' = ' + self.severity
 
     class Meta:
         verbose_name = 'Interaction'
